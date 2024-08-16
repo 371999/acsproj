@@ -1,6 +1,7 @@
 provider "aws" {
-  region = "us-east-1"
+  region = "us-west-2"  # Replace with your desired AWS region
 }
+
 resource "aws_vpc" "VPC" {
   cidr_block = var.cidr_name
   tags = {

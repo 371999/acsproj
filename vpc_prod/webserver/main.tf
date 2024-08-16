@@ -8,6 +8,10 @@ terraform {
   required_version = ">= 1.5.0"
 }
 
+provider "aws" {
+  region = "us-west-2"  # Replace with your desired AWS region
+}
+
 data "terraform_remote_state" "Prod_vpc" {
   backend = "s3"
   config = {
