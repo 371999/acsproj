@@ -3,7 +3,7 @@ name: Terraform Linting and Deployment
 on:
   push:
     branches:
-      - main  # Trigger only on push to the main branch
+      - main
 
 jobs:
   lint-and-deploy:
@@ -22,22 +22,34 @@ jobs:
       run: |
         curl -s https://raw.githubusercontent.com/terraform-linters/tflint/master/install_linux.sh | bash
 
-    - name: Run TFLint
+    # Run TFLint and Terraform for 'network' directory
+    - name: Run TFLint on Network
+      working-directory: vpc_prod/network
       run: |
         tflint --init
         tflint
 
-    - name: Terraform Init
-      run: terraform init
-
-    - name: Terraform Format
-      run: terraform fmt
-
-    - name: Terraform Validate
-      run: terraform validate
-
-    - name: Terraform Apply
+    - name: Terraform Init and Apply for Network
+      working-directory: vpc_prod/network
       env:
         AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
         AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      run: terraform apply -auto-approve
+      run: |
+        terraform init
+        terraform apply -auto-approve
+
+    # Run TFLint and Terraform for 'webserver' directory
+    - name: Run TFLint on Webserver
+      working-directory: vpc_prod/webserver
+      run: |
+        tflint --init
+        tflint
+
+    - name: Terraform Init and Apply for Webserver
+      working-directory: vpc_prod/webserver
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: |
+        terraform init
+        terraform apply -auto-approve
