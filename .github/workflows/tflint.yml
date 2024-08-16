@@ -1,15 +1,12 @@
-name: Terraform Linting
+name: Terraform Linting and Deployment
 
 on:
   push:
     branches:
-      - main
-  pull_request:
-    branches:
-      - main
+      - main  # Trigger only on push to the main branch
 
 jobs:
-  lint:
+  lint-and-deploy:
     runs-on: ubuntu-latest
 
     steps:
@@ -29,3 +26,12 @@ jobs:
       run: |
         tflint --init
         tflint
+
+    - name: Terraform Init
+      run: terraform init
+
+    - name: Terraform Apply
+      env:
+        AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      run: terraform apply -auto-approve
