@@ -16,7 +16,7 @@ jobs:
     - name: Set up Terraform
       uses: hashicorp/setup-terraform@v2
       with:
-        terraform_version: 1.8.5  # Replace with the version you are using
+        terraform_version: 1.5.0  # Replace with the version you are using
 
     - name: Install TFLint
       run: |
